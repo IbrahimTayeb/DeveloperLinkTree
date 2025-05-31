@@ -1,8 +1,12 @@
 import express from 'express';
+import { prisma } from '../index';
 const router = express.Router();
 
-router.get('/me', (req, res) => {
-  res.json({ username: 'John Doe' });
+const defaultUserId = 1;
+
+router.get('/me', async (req, res) => {
+  const user = await prisma.user.findUnique({ where: { id: defaultUserId } });
+  res.json({ username: user?.username });
 });
 
 export default router;

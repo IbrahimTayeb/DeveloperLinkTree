@@ -1,21 +1,21 @@
 import express from 'express';
 import { prisma } from '../index';
-const router = express.Router();
+import { authenticate } from '../middleware/auth';
 
+const router = express.Router();
+router.use(authenticate);
 const defaultUserId = 1; // simulate logged-in user
 
 router.get('/', async (req, res) => {
-  const links = await prisma.link.findMany({
-    where: { userId: defaultUserId },
-  });
+  const userId = (req as any).userId;
+  const links = await prisma.link.findMany({ where: { userId } });
   res.json(links);
 });
 
 router.post('/', async (req, res) => {
+  const userId = (req as any).userId;
   const { title, url } = req.body;
-  const newLink = await prisma.link.create({
-    data: { title, url, userId: defaultUserId },
-  });
+  const newLink = await prisma.link.create({ data: { title, url, userId } });
   res.status(201).json(newLink);
 });
 

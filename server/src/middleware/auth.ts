@@ -13,6 +13,6 @@ export const authenticate = (req: Request, res: Response, next: NextFunction) =>
     (req as any).userId = payload.userId;
     next();
   } catch (err) {
-    res.status(401).json({ error: 'Invalid token' });
+    res.status(401).json({ error: 'Invalid or expired token' });
   }
 };
